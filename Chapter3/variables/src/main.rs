@@ -1,3 +1,7 @@
+// 상수는 항상 불변이고, 반드시 타입이 명시되어야 한다.
+// 상수는 전역 스코프를 포함한 어디서든 선언될 수 있다.
+// 변수는 런타임에 값이 계산되어 할당될 수 있지만, 상수는 상수 표현식만 할당할 수 있다. (즉, 컴파일 타임에 값이 할당되어야 한다.)
+// 상수는 선언된 스코프 내에서 프로그램이 동작하는 전체 시간 동안 유효하다.
 const THREE_HOURS_IN_SECONDS: u32 = 60 * 60 * 3;
 
 fn main() {
@@ -7,13 +11,14 @@ fn main() {
     println!("The value of x is: {x}");
 
     // Shadowing
+    // 만약 let을 안쓰고 값을 변경하면, 불변으로 컴파일 에러가 발생한다.
+    // 따라서, Shadowing을 통하여 값을 변형하면서 변형이 완료된 후에는 불변으로 유지할 수 있다.
     let y = 5;
     let y = y + 1;
-    let y = y * 2;
     println!("The value of y is: {y}");
     {
         // 해당 스코프가 끝나면 y는 이전의 값으로 돌아간다.
-        let y = 3;
+        let y = y * 2;
         println!("The value of y is: {y}");
     }
     println!("The value of y is: {y}");

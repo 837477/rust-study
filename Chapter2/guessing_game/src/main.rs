@@ -37,6 +37,7 @@ fn main() {
         
         // 숫자로 변환
         // parse()로 자료형을 변경할 수 있지만, 이때는 명시적으로 자료형을 지정해주어야 한다. (u32)
+        // let guess: u32 = guess.trim().parse().expect("Please type a number!"); 를 match로 풀어서 사용
         let guess: u32 = match guess.trim().parse() {
             // parse() 메서드는 Result 열거형을 반환한다.
             // match를 통해서 Result 열거형의 값에 따라 원하는 작업을 처리를 할 수 있다.
