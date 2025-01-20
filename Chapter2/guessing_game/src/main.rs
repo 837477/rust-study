@@ -21,6 +21,7 @@ fn main() {
 
         // Rust의 표준 출력은 기본적으로 "개행" 단위로 버퍼링된다.
         // 따라서 개행 없는 출력을 위해서는 flush() 메서드를 호출하여 버퍼를 비워주어야 정상적인 출력이 됨.
+        // use std::io::{self, Write}; 를 사용하면, io::Write를 사용할 수 있음
         io::stdout().flush().unwrap();  // 버퍼 비우기
 
         // 변수 선언
@@ -29,6 +30,7 @@ fn main() {
         let mut guess = String::new();
 
         // 사용자 입력 받기
+        // 상단에 use를 사용하지 않고, std::io::stdin() 로 바로 사용 가능
         io::stdin()
             .read_line(&mut guess)  // 사용자에게 입력받은 값을 읽어서, guess 변수에 저장
             .expect("Failed to read line");  // Result(enum)의 값이 반환되는데, 이 값이 Err인 경우에만 expect() 메서드의 인자로 전달한 메시지를 출력
@@ -37,13 +39,13 @@ fn main() {
         
         // 숫자로 변환
         // parse()로 자료형을 변경할 수 있지만, 이때는 명시적으로 자료형을 지정해주어야 한다. (u32)
-        // let guess: u32 = guess.trim().parse().expect("Please type a number!"); 를 match로 풀어서 사용
         let guess: u32 = match guess.trim().parse() {
             // parse() 메서드는 Result 열거형을 반환한다.
             // match를 통해서 Result 열거형의 값에 따라 원하는 작업을 처리를 할 수 있다.
             Ok(num) => num,
             Err(_) => continue
         };
+        // let guess: u32 = guess.trim().parse().expect("Please type a number!");  // Err발생시 프로그램을 중단시키려면 expect()를 사용
 
         println!("You guessed: {guess}");
         // println!("You guessed: {}", guess);  // 이렇게도 사용 가능
