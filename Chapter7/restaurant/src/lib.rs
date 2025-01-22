@@ -13,7 +13,6 @@ mod front_of_house {
         fn take_payment() {}
     }
 }
-
 pub fn eat_at_restaurant() {
     // 절대 경로
     crate::front_of_house::hosting::add_to_waitlist();
@@ -23,8 +22,10 @@ pub fn eat_at_restaurant() {
     front_of_house::hosting::add_to_waitlist();
 }
 
-fn deliver_order() {}
 
+
+
+fn deliver_order() {}
 mod back_of_house {
     fn fix_incorrect_order() {
         cook_order();
@@ -34,6 +35,8 @@ mod back_of_house {
 
     fn cook_order() {}
 }
+
+
 
 mod back_of_house {
     pub struct Breakfast {
@@ -50,7 +53,6 @@ mod back_of_house {
         }
     }
 }
-
 pub fn eat_at_restaurant() {
     // 호밀 (Rye) 토스트를 곁들인 여름철 조식 주문하기
     let mut meal = back_of_house::Breakfast::summer("Rye");
@@ -62,14 +64,83 @@ pub fn eat_at_restaurant() {
     // meal.seasonal_fruit = String::from("blueberries");
 }
 
+
+
 mod back_of_house {
     pub enum Appetizer {  // 열거형은 공개로 지정할 경우 모든 배리언트가 공개됨
         Soup,
         Salad,
     }
 }
-
 pub fn eat_at_restaurant() {
     let order1 = back_of_house::Appetizer::Soup;
     let order2 = back_of_house::Appetizer::Salad;
 }
+
+
+// 관용적으로, hosting 모듈 내부에 있는 함수를 사용하려면 -> 부모 모듈까지만 use 구문을 사용하여 가져옴
+// 이렇게 해야 확실하게 해당 함수가 로컬에 정의되어 있지 않음을 명백히 보여준다.
+use crate::front_of_house::hosting;
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+}
+mod customer {
+    pub fn eat_at_restaurant() {
+        super::hosting::add_to_waitlist();  // super 키워드를 사용하여 부모 모듈로 올라갈 수 있음
+        // hosting::add_to_waitlist();  // 에러 발생, (use 구문과 다른 스코프에 존재)
+    }
+}
+
+
+
+// 하지만, 열거형이나 구조체는 전체 경로를 사용하는 것이 관용적
+use std::collections::HashMap;
+fn main() {
+    let mut map = HashMap::new();
+    map.insert(1, 2);
+}
+
+
+
+// 동일한 이름의 함수나 모듈을 가져올 때, as 키워드를 사용하여 로컬 이름을 변경할 수 있음
+use std::fmt::Result;
+use std::io::Result as IoResult;
+fn function1() -> Result {
+    // --생략--
+}
+fn function2() -> IoResult<()> {
+    // --생략--
+}
+
+
+
+mod front_of_house {
+    pub mod hosting {
+        pub fn add_to_waitlist() {}
+    }
+}
+pub use crate::front_of_house::hosting;
+pub fn eat_at_restaurant() {
+    hosting::add_to_waitlist();
+    // 일반적으로 use 키워드로 가져오면 비공개 모듈이지만, pub use로 가져오면 공개 모듈로 가져옴
+    // 이렇게 사용 안했으면, front_of_house::hosting::add_to_waitlist(); 로 사용해야함
+}
+
+
+
+use std::cmp::Ordering;
+use std::io;
+// use 키워드를 사용하여 여러 개의 항목을 가져올 수 있음
+use std::{cmp::Ordering, io};
+
+
+
+use std::io;
+use std::io::Write;
+// use 키워드를 사용하여 같은 패키지의 여러 개의 항목을 가져올 수 있음
+use std::io::{self, Write};
+
+
+
+// glob 연산자(*)를 사용하여 패키지의 모든 공개 항목을 가져올 수 있음
+use std::collections::*;
