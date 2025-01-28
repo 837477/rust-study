@@ -1,0 +1,14 @@
+[profile.dev]
+opt-level = 0
+
+[profile.release]
+opt-level = 3
+
+# opt-level은 0~3의 값을 가지며, 높을수록 높은 최적화 수치를 적용해서 컴파일 시간이 늘어남.
+
+[package]
+name = "cargo_profile"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
