@@ -10,5 +10,7 @@ opt-level = 3
 name = "cargo_profile"
 version = "0.1.0"
 edition = "2021"
+description = "TEST"
+license = "MIT"
 
 [dependencies]
