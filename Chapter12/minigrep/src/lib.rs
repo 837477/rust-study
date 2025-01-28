@@ -9,9 +9,10 @@ pub struct Config {
     pub ignore_case: bool,
 }
 
+/*
+// Chapter12 에서 진행한 방식
 impl Config {
-    // new()는 대부분 프로그래머들이, 절대 실패하지 않는다 라고 예상하는 관례가 있음.
-    pub fn build(args: &[String]) -> Result<Config, &'static str> {
+    pub fn build(mut args: impl Iterator<Item = String>,) -> Result<Config, &'static str> {
         if args.len() < 3 {
             return Err("not enough arguments");
         }
@@ -24,7 +25,38 @@ impl Config {
         Ok(Config {query, file_path})
     }
 }
+*/
 
+// Chapter13 에서 최적화 한 방식 (반복자 사용)
+impl Config {
+    // new()는 대부분 프로그래머들이, 절대 실패하지 않는다 라고 예상하는 관례가 있음.
+    pub fn build(
+        mut args: impl Iterator<Item = String>,
+    ) -> Result<Config, &'static str> {
+        args.next();
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file path"),
+        };
+
+        let ignore_case = env::var("IGNORE_CASE").is_ok();
+
+        Ok(Config {
+            query,
+            file_path,
+            ignore_case,
+        })
+    }
+}
+
+/*
+// Chapter12 에서 진행한 방식
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let mut results = Vec::new();
     for line in contents.lines() {
@@ -33,6 +65,15 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
         }
     }
     results
+}
+*/
+
+// Chapter13 에서 최적화 한 방식 (반복자 사용)
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 pub fn search_case_insensitive<'a>(
